@@ -1,14 +1,13 @@
 import path from 'path';
-import IncludedFile from 'meteor-build-plugin-helper-included-file';
 import logger from 'hookable-logger';
 
 export default class Processor {
-  constructor(stepName, {fileTypes = ['scss','sass'], fileExtensions = ['scss','sass']}) {
+  constructor(stepName, { fileTypes = ['scss', 'sass'], fileExtensions = ['scss', 'sass'] }, compiler) {
     this.stepName = stepName;
-    this.filesByName = null;
     this.fileExtensions = fileExtensions;
     this.fileTypes = fileTypes;
     this.additionalLineCount = 0;
+    this.compiler = compiler;
   }
 
   isRoot(inputFile) {
@@ -32,10 +31,9 @@ export default class Processor {
     return this.fileTypes.indexOf(type) !== -1;
   }
 
-  async process(file, filesByName) {
-    this.filesByName = filesByName;
+  async process(file, resultSoFar) {
     try {
-      await this._process(file);
+      return await this._process(file, resultSoFar);
     } catch (err) {
       const numberOfAdditionalLines = this.additionalLineCount
         ? this.additionalLineCount + 1
@@ -49,14 +47,8 @@ export default class Processor {
     }
   }
 
-  _process(file) {
+  _process() {
     throw new Error('the _process method must be implemented by the child class')
-  }
-
-  _createIncludedFile(importPath, rootFile) {
-    const file = new IncludedFile(importPath, rootFile);
-    file.prepInputFile().await();
-    this.filesByName.set(importPath, file);
   }
 
 };

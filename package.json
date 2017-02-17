@@ -15,7 +15,6 @@
   "dependencies": {
     "gulp-build-babel-standard": "^0.0.2",
     "hookable-logger": "0.0.1",
-    "meteor-build-plugin-helper-included-file": "0.0.2",
     "regenerator-runtime": "^0.10.1"
   }
 }

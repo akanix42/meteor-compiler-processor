@@ -24,10 +24,6 @@ var _path = require('path');
 
 var _path2 = _interopRequireDefault(_path);
 
-var _meteorBuildPluginHelperIncludedFile = require('meteor-build-plugin-helper-included-file');
-
-var _meteorBuildPluginHelperIncludedFile2 = _interopRequireDefault(_meteorBuildPluginHelperIncludedFile);
-
 var _hookableLogger = require('hookable-logger');
 
 var _hookableLogger2 = _interopRequireDefault(_hookableLogger);
@@ -35,7 +31,7 @@ var _hookableLogger2 = _interopRequireDefault(_hookableLogger);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Processor = function () {
-  function Processor(stepName, _ref) {
+  function Processor(stepName, _ref, compiler) {
     var _ref$fileTypes = _ref.fileTypes,
         fileTypes = _ref$fileTypes === undefined ? ['scss', 'sass'] : _ref$fileTypes,
         _ref$fileExtensions = _ref.fileExtensions,
@@ -43,10 +39,11 @@ var Processor = function () {
     (0, _classCallCheck3.default)(this, Processor);
 
     this.stepName = stepName;
-    this.filesByName = null;
+    // this.filesByName = null;
     this.fileExtensions = fileExtensions;
     this.fileTypes = fileTypes;
     this.additionalLineCount = 0;
+    this.compiler = compiler;
   }
 
   (0, _createClass3.default)(Processor, [{
@@ -76,24 +73,22 @@ var Processor = function () {
   }, {
     key: 'process',
     value: function () {
-      var _ref2 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(file, filesByName) {
+      var _ref2 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(file, resultSoFar) {
         var numberOfAdditionalLines, adjustedLineNumber;
         return _regenerator2.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                this.filesByName = filesByName;
-                _context.prev = 1;
-                _context.next = 4;
-                return this._process(file);
+                _context.prev = 0;
+                _context.next = 3;
+                return this._process(file, resultSoFar);
 
-              case 4:
-                _context.next = 15;
-                break;
+              case 3:
+                return _context.abrupt('return', _context.sent);
 
               case 6:
                 _context.prev = 6;
-                _context.t0 = _context['catch'](1);
+                _context.t0 = _context['catch'](0);
                 numberOfAdditionalLines = this.additionalLineCount ? this.additionalLineCount + 1 : 0;
                 adjustedLineNumber = _context.t0.line - numberOfAdditionalLines;
 
@@ -108,7 +103,7 @@ var Processor = function () {
                 return _context.stop();
             }
           }
-        }, _callee, this, [[1, 6]]);
+        }, _callee, this, [[0, 6]]);
       }));
 
       function process(_x, _x2) {
@@ -119,15 +114,8 @@ var Processor = function () {
     }()
   }, {
     key: '_process',
-    value: function _process(file) {
+    value: function _process() {
       throw new Error('the _process method must be implemented by the child class');
-    }
-  }, {
-    key: '_createIncludedFile',
-    value: function _createIncludedFile(importPath, rootFile) {
-      var file = new _meteorBuildPluginHelperIncludedFile2.default(importPath, rootFile);
-      file.prepInputFile().await();
-      this.filesByName.set(importPath, file);
     }
   }]);
   return Processor;
